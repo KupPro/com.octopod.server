@@ -46,7 +46,7 @@ class Octopod {
 
         static::$screenId = static::detectScreenId();
 
-        $generatedPath = App::path('app').Config::get('pahts.generated').'/';
+        $generatedPath = App::path('app').Config::get('paths.generated').'/';
 
         if (file_exists($generatedPath."data/fonts.php")) {
             static::$fonts = include($generatedPath."data/fonts.php");
