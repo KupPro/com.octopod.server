@@ -31,7 +31,7 @@ class View implements Renderable {
             throw new ViewNotFoundException($this->view);
         }
 
-        $this->cached = (is_null($cached)) ? Config::get('defaultCacheState') : $cached;
+        $this->cached = (is_null($cached)) ? Config::get('default.cache') : $cached;
 
         return $this;
     }
