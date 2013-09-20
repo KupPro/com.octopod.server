@@ -14,6 +14,10 @@ return array(
         'screen' => '640x960',*/
     ),
 
+    'paths' => array(
+        'generated' => '/generated'
+    ),
+
     //'scaleScreen' => '640x960',
 
     'screen' => array(

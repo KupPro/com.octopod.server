@@ -46,10 +46,14 @@ class Octopod {
 
         static::$screenId = static::detectScreenId();
 
-        $generatedPath = App::path('app').'/../generated/';
+        $generatedPath = App::path('app').Config::get('pahts.generated').'/';
 
-        static::$fonts = include($generatedPath."data/fonts.php");
-        static::$images = include($generatedPath."data/images.php");
+        if (file_exists($generatedPath."data/fonts.php")) {
+            static::$fonts = include($generatedPath."data/fonts.php");
+        }
+        if (file_exists($generatedPath."data/images.php")) {
+            static::$images = include($generatedPath."data/images.php");
+        }
 
         static::$imgPath = ((Config::get('imagesUrl') === 'auto') ? static::cutPathForImages() : Config::get('imagesUrl')).static::$screenId."/";
     }
