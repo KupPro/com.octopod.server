@@ -27,11 +27,6 @@
     "autoload": {
         "psr-0": {
             "Octopod\\Octophp": "src/"
-        },
-        "classmap": [
-            "src/",
-            "app/handlers",
-			"app/model"
-        ]
+        }
     }
 }
