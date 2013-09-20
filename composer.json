@@ -1,0 +1,37 @@
+{
+    "name": "octopod/octophp",
+    "description": "Cross-Platform Mobile Development Framework",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Kup",
+            "email": "kirill.shm@gmail.com"
+        },
+        {
+            "name": "sw_double",
+            "email": "sw.double@gmail.com"
+        }
+    ],
+    "require": {
+		"monolog/monolog": "1.5.*",
+        "illuminate/container": "v4.0.6",
+        "illuminate/support": "v4.0.6",
+		"illuminate/events": "v4.0.6",
+		"illuminate/config": "v4.0.6",
+        "symfony/http-foundation": "v2.3.3",
+        "symfony/filesystem": "v2.3.3"
+    },
+    "require-dev": {
+        "dubcanada/php-profiler": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Octopod\\Octophp": "src/"
+        },
+        "classmap": [
+            "src/",
+            "app/handlers",
+			"app/model"
+        ]
+    }
+}
