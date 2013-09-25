@@ -27,6 +27,9 @@
     "autoload": {
         "psr-0": {
             "Octopod\\Octophp": "src/"
-        }
+        },
+		"files": [
+			"src/Octopod/Octophp/base.php"
+		]
     }
 }
