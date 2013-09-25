@@ -113,9 +113,12 @@ class Octopod {
     static function style($style)
     {
         $styleString = '';
+        $styles = Config::get("style.$style");
 
-        foreach (Config::get("style.$style") as $key => $value) {
-            $styleString .= " $key=\"$value\" ";
+        if (is_array($styles) and count($styles)) {
+            foreach ($styles as $key => $value) {
+                $styleString .= " $key=\"$value\" ";
+            }
         }
 
         return $styleString;
