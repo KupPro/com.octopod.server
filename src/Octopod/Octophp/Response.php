@@ -102,7 +102,7 @@ class Response implements Renderable {
     public function render() {
         ob_start();
 
-        $filePath = realpath(\App::path('octophp').'/responseTemplate.php');
+        $filePath = realpath(Facades\App::path('octophp').'/responseTemplate.php');
         if (empty($filePath)) {
             throw new OctophpException("Response template cannot be found at $filePath. Check your installation.");
         }

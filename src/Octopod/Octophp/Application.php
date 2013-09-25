@@ -3,7 +3,7 @@
 namespace Octopod\Octophp;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Facade;
+use Octopod\Octophp\Facades\Facade;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class OctophpException extends \Exception {
