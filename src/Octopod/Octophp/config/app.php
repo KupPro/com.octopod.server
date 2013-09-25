@@ -97,4 +97,16 @@ return array(
 
     'font' => array(),
     'style' => array(),
+
+    'aliases' => array(
+        'App' => 'Octopod\Octophp\Facades\App',
+        'Handler' => 'Octopod\Octophp\Facades\Handler',
+        'Event' => 'Octopod\Octophp\Facades\Event',
+        'Request' => 'Octopod\Octophp\Facades\Request',
+        'Response' => 'Octopod\Octophp\Facades\Response',
+        'Config' => 'Octopod\Octophp\Facades\Config',
+        'Template' => 'Octopod\Octophp\Facades\Template',
+        'View' => 'Octopod\Octophp\Facades\View',
+        'Octopod' => 'Octopod\Octophp\Octopod',
+    )
 );

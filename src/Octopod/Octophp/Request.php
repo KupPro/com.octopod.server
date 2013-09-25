@@ -54,7 +54,7 @@ class Request {
             $handler = $this->info('handlerId');
         }
         if (empty($handler)) {
-            $handler = \Config::get('default.handler');
+            $handler = Facades\Config::get('default.handler');
         }
 
         return $handler;

@@ -37,8 +37,8 @@ class Response implements Renderable {
     public function __construct()
     {
         $this->sessionId = '';
-        $this->debug = \Config::get('debug');
-        $this->orientation = \Config::get('default.orientation');
+        $this->debug = Facades\Config::get('debug');
+        $this->orientation = Facades\Config::get('default.orientation');
         $this->cacheImagesCounter = 0;
         $this->cacheMarkupCounter = 0;
         $this->installationId = '';

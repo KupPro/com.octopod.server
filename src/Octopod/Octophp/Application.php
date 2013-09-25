@@ -74,19 +74,7 @@ class Application extends Container {
 
     public function registerAliases()
     {
-        AliasLoader::getInstance(array(
-            'App' => 'Octopod\Octophp\Facades\App',
-            'Handler' => 'Octopod\Octophp\Facades\Handler',
-            'Event' => 'Octopod\Octophp\Facades\Event',
-            'Request' => 'Octopod\Octophp\Facades\Request',
-            'Response' => 'Octopod\Octophp\Facades\Response',
-            'Config' => 'Octopod\Octophp\Facades\Config',
-            'Template' => 'Octopod\Octophp\Facades\Template',
-            'View' => 'Octopod\Octophp\Facades\View',
-
-            'Octopod' => 'Octopod\Octophp\Octopod',
-            // temp
-        ))->register();
+        AliasLoader::getInstance($this['config']->get('aliases'))->register();
     }
 
     public function run()
