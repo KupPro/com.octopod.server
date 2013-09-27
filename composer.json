@@ -1,7 +1,7 @@
 {
     "name": "octopod/octophp",
     "description": "Cross-Platform Mobile Development Framework",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Kup",
