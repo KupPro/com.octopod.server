@@ -11,6 +11,8 @@ class OctophpException extends \Exception {
 
 class Application extends Container {
 
+    protected $booted = false;
+
     public function __construct($applicationPath)
     {
         $this['app'] = $this;
@@ -30,14 +32,17 @@ class Application extends Container {
 
     public function boot()
     {
+        if ($this->booted)
+            return;
+
         // Setup Facades
         Facade::setFacadeApplication($this);
-
         // Register bindings into container
         $this->registerProviders();
-
         // Alias classes into global namespace
         $this->registerAliases();
+
+        $this->booted = true;
     }
 
     /**
@@ -45,7 +50,9 @@ class Application extends Container {
      */
     public function registerProviders()
     {
-        $this->instance('Symfony\Component\HttpFoundation\Request', SymfonyRequest::createFromGlobals());
+        $this->singleton('Symfony\Component\HttpFoundation\Request', function () {
+            return SymfonyRequest::createFromGlobals();
+        });
         $this->singleton('Octopod\Octophp\Application', 'app');
 
         $this->singleton('request', 'Octopod\Octophp\Request');
@@ -79,6 +86,8 @@ class Application extends Container {
 
     public function run()
     {
+        $this->boot();
+
         $handlerId = $this['request']->getHandler();
 
         try {
