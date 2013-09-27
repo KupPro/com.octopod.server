@@ -1,49 +1,60 @@
 <?php
 
-use Octopod\Core\Config;
+use Octopod\Octophp\Facades\Config;
+use Octopod\Octophp\Facades\App;
 
-include "../core/classes/Config.php";
+$generatedPath = App::path('app').Config::get('paths.generated').'/';
+$resourcesPath = App::path('app').Config::get('paths.resources').'/';
 
+rrmdir($generatedPath);
 
-rrmdir("../../generated");
+createFolderIfNotExists($generatedPath);
+createFolderIfNotExists($generatedPath.'data');
+createFolderIfNotExists($generatedPath.'images');
 
-createFolderIfNotExists("../../generated");
-createFolderIfNotExists("../../generated/data");
-createFolderIfNotExists("../../generated/images");
+$scaleScreen = Config::get("scaleScreen");
+$screen = Config::get('screen');
 
-$fontSizes = Config::$font;
 $imageTodo = array();
 
-$scaleImagesList = filesToArray('../../application/resources/images/' . Config::$scaleScreenId);
+$scaleImagesList = filesToArray($resourcesPath.'images/' . $scaleScreen);
 
-if (sizeof($fontSizes[Config::$scaleScreenId])) {
-    foreach (Config::$screen as $screenId => $dims) {
-        $imagesList = filesToArray('../../application/resources/images/' . $screenId);
-        if (sizeof($imagesList))
+if (count($screen)) {
+    foreach ($screen as $screenId => $dims) {
+
+        $imagesList = filesToArray($resourcesPath.'images/' . $screenId);
+
+        if (count($imagesList))
             foreach ($imagesList as $imageInfo) {
-                $imageTodo[] = array("command" => "copy", "sourcePath" => $imageInfo['fullPath'], "destPath" => "../../generated/images/" . $screenId . $imageInfo['localPath'], "screenId" => $screenId, "imageKey" => $imageInfo['localPath']);
+                $imageTodo[] = array(
+                    "command" => "copy",
+                    "sourcePath" => $imageInfo['fullPath'],
+                    "destPath" => $generatedPath.'images/' . $screenId . $imageInfo['localPath'],
+                    "screenId" => $screenId,
+                    "imageKey" => $imageInfo['localPath']);
             }
 
-        if ($screenId != Config::$scaleScreenId) {
-            $divider = Config::$screen[Config::$scaleScreenId]["optimalWidth"] / $dims["optimalWidth"];
-
-            foreach (Config::$font[Config::$scaleScreenId] as $name => $value) {
-                if ((!isset (Config::$font[$screenId][$name])) || Config::$font[$screenId][$name] == "") {
-                    $fontSizes[$screenId][$name] = round($value / $divider);
-                }
-            }
+        if ($screenId != $scaleScreen) {
+            $divider = $screen[$scaleScreen]["optimalWidth"] / $dims["optimalWidth"];
 
             foreach ($scaleImagesList as $scaleImageInfo) {
-                if (!file_exists('../../application/resources/images/' . $screenId . $scaleImageInfo['localPath'])) {
-                    $imageTodo[] = array("command" => "convert", "sourcePath" => $scaleImageInfo['fullPath'], "destPath" => "../../generated/images/" . $screenId . $scaleImageInfo['localPath'], "screenId" => $screenId, "imageKey" => $scaleImageInfo['localPath'], "divider" => $divider);
+                if ( ! file_exists($resourcesPath.'images/' . $screenId . $scaleImageInfo['localPath'])) {
+                    $imageTodo[] = array(
+                        "command" => "convert",
+                        "sourcePath" => $scaleImageInfo['fullPath'],
+                        "destPath" => $generatedPath . 'images/' . $screenId . $scaleImageInfo['localPath'],
+                        "screenId" => $screenId,
+                        "imageKey" => $scaleImageInfo['localPath'],
+                        "divider" => $divider
+                    );
                 }
             }
         }
     }
 }
 
-file_put_contents('../../generated/data/fonts.php', '<?php return ' . var_export($fontSizes, true) . ';');
-file_put_contents('../../generated/data/imagesInitList.php', '<?php return ' . var_export($imageTodo, true) . ';');
+//file_put_contents('/home/www/ilich/octopod/new/php_apps/techrent/generated/data/fonts.php', '<?php return ' . var_export($fontSizes, true) . ';');
+file_put_contents($generatedPath . 'data/imagesInitList.php', '<?php return ' . var_export($imageTodo, true) . ';');
 
 
 function createFolderIfNotExists($path)
@@ -74,8 +85,10 @@ function filesToArray($dir, $dirWithoutRoot = "")
 function rrmdir($dir)
 {
     if (file_exists($dir))
+    {
         foreach (glob($dir . '/*') as $file) {
             if (is_dir($file)) rrmdir($file); else unlink($file);
         }
     rmdir($dir);
+    }
 }

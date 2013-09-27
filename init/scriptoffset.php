@@ -23,7 +23,7 @@ if ($offset == 0) {
     include "init.php";
 }
 
-$imagesInitList = include "../../generated/data/imagesInitList.php";
+$imagesInitList = include "/home/www/ilich/octopod/new/php_apps/techrent/generated/data/imagesInitList.php";
 $count = sizeof($imagesInitList);
 
 serveImage ($imagesInitList[$offset]);

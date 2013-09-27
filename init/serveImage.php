@@ -1,14 +1,15 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: KupMac
- * Date: 20.07.13
- * Time: 9:19
- * To change this template use File | Settings | File Templates.
- */
+
+use Octopod\Octophp\Facades\Config;
+use Octopod\Octophp\Facades\App;
+
+$generatedPath = App::path('app').Config::get('paths.generated').'/';
+$resourcesPath = App::path('app').Config::get('paths.resources').'/';
 
 function serveImage($imageInit)
 {
+    $generatedPath = App::path('app').Config::get('paths.generated').'/';
+
     $imageInfo = @getimagesize($imageInit['sourcePath']);
     if ($imageInfo) {
         if ($imageInit['command'] == 'copy') {
@@ -18,7 +19,7 @@ function serveImage($imageInit)
             list($resultWidth, $resultHeight) = convertImage($imageInit['sourcePath'], $imageInit['destPath'], $imageInit['divider']);
         }
 
-        $fp = fopen('../../generated/data/images.list', 'a+');
+        $fp = fopen($generatedPath . 'data/images.list', 'a+');
         fwrite($fp, $imageInit['destPath'] . "||" . $resultWidth . "||" . $resultHeight . "||" . $imageInit['screenId'] . "||" . $imageInit['imageKey'] . "\n");
         fclose($fp);
     }
@@ -75,7 +76,9 @@ function convertImage($source, $dest, $divider)
 
 function saveImageListToArray()
 {
-    $imagesList = explode("\n", file_get_contents('../../generated/data/images.list', 'a+'));
+    $generatedPath = App::path('app').Config::get('paths.generated').'/';
+
+    $imagesList = explode("\n", file_get_contents($generatedPath . 'data/images.list', 'a+'));
     foreach ($imagesList as $imageString) {
         if ($imageString != "") {
             $tmp = explode("||", $imageString);
@@ -84,7 +87,7 @@ function saveImageListToArray()
             $images[$key][$tmp[3]]['height'] = $tmp[2];
         }
     }
-    file_put_contents('../../generated/data/images.php', '<?php return ' . var_export($images, true) . ';');
+    file_put_contents($generatedPath . 'data/images.php', '<?php return ' . var_export($images, true) . ';');
 }
 
 function createFolderForFilePath($path)

@@ -53,6 +53,7 @@ class Application extends Container {
         $this->singleton('Symfony\Component\HttpFoundation\Request', function () {
             return SymfonyRequest::createFromGlobals();
         });
+        $this->singleton('symfony.request', 'Symfony\Component\HttpFoundation\Request');
         $this->singleton('Octopod\Octophp\Application', 'app');
 
         $this->singleton('request', 'Octopod\Octophp\Request');
@@ -84,10 +85,8 @@ class Application extends Container {
         AliasLoader::getInstance($this['config']->get('aliases'))->register();
     }
 
-    public function run()
+    public function platform()
     {
-        $this->boot();
-
         $handlerId = $this['request']->getHandler();
 
         try {
@@ -106,6 +105,74 @@ class Application extends Container {
         }
 
         $this['response']->send();
+    }
+
+    public function run()
+    {
+        $this->boot();
+
+        // Get request path
+        $path = $this['symfony.request']->getPathInfo();
+        $path = trim($path, '/');
+        if (empty($path)) $path = '/';
+
+        // Paths and their controllers
+        $routes = array(
+            '/' => array($this, 'platform'),
+            'init' => array($this, 'init'),
+            'init/scriptoffset' => array($this, 'init_scriptoffset'),
+        );
+
+        if (isset($routes[$path]) AND is_callable($routes[$path])) {
+            call_user_func_array($routes[$path], array());
+        }
+    }
+
+    public function init()
+    {
+        include $this->path('octophp').'/init/view.php';
+    }
+
+    public function init_scriptoffset()
+    {
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
+            return;
+        }
+
+        $action = $_POST['action'];
+        $url = $_POST['url'];
+        $offset = $_POST['offset'];
+
+        $step = 1;
+
+        if (empty($action)) return;
+        if (empty($url)) return;
+
+        if ($offset == 0) {
+            include $this->path('octophp').'/init/init.php';
+        }
+
+        $generatedPath = Facades\App::path('app').Facades\Config::get('paths.generated').'/';
+        $resourcesPath = Facades\App::path('app').Facades\Config::get('paths.resources').'/';
+
+        include $this->path('octophp').'/init/serveImage.php';
+
+        $imagesInitList = include $generatedPath . 'data/imagesInitList.php';
+
+        $count = count($imagesInitList);
+
+        serveImage($imagesInitList[$offset]);
+
+        $offset = $offset + $step;
+        if ($offset >= $count) {
+            saveImageListToArray();
+            $success = 1;
+        } else {
+            $success = round($offset / $count, 4);
+        }
+
+        $output = array('offset' => $offset, 'success' => $success);
+        echo json_encode($output);
     }
 
     public function path($path = 'app')
