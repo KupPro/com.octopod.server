@@ -14,8 +14,11 @@ return array(
         'screen' => '640x960',*/
     ),
 
+    // relative to the application folder
     'paths' => array(
-        'generated' => '/generated'
+        'resources' => '/resources',
+        'generated' => '/generated',
+        'storage' => '/storage',
     ),
 
     //'scaleScreen' => '640x960',
