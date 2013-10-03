@@ -105,7 +105,8 @@ class Octopod {
 
     private static function cutPathForImages()
     {
-        $url = App::make('uri')->create('generated/images/');
+        // @todo: make it use config generated path
+        $url = App::make('uri')->create('app/generated/images/');
 
         return $url;
     }
