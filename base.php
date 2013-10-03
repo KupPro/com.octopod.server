@@ -16,13 +16,13 @@ namespace {
 
     if (!function_exists('iWidth')) {
         function iWidth($imageKey) {
-            return Octopod::iPath($imageKey);
+            return Octopod::iWidth($imageKey);
         }
     }
 
     if (!function_exists('iHeight')) {
         function iHeight($imageKey) {
-            return Octopod::iPath($imageKey);
+            return Octopod::iHeight($imageKey);
         }
     }
 
@@ -34,7 +34,7 @@ namespace {
 
     if ( ! function_exists('octoHPX')) {
         function octoHPX($value){
-            return Octopod::octoWPX($value);
+            return Octopod::octoHPX($value);
         }
     }
 
