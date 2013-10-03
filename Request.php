@@ -40,18 +40,26 @@ class Request {
 
     public function prepareRequest()
     {
-        $data = $this->symfonyRequest->getContent();
-        $data = $this->data = @get_object_vars(json_decode(urldecode($data)));
+        $this->data = $this->symfonyRequest->getContent();
+
+        // @todo: is urldecode necessary?
+        $data = json_decode(urldecode($this->data));
+
+        // @todo: check for json errors
 
         if (! is_null($data)) {
             $this->parameters->add($data);
         }
+
+        // Log request data
+        Facades\Log::request($this->data);
     }
 
     public function getHandler()
     {
+        // Check for $_GET handlerId param, if not found check in request data
         if (is_null($handler = $this->symfonyRequest->get('handlerId'))) {
-            $handler = $this->info('handlerId');
+            $handler = $this->data('handlerId');
         }
         if (empty($handler)) {
             $handler = Facades\Config::get('default.handler');
@@ -60,7 +68,7 @@ class Request {
         return $handler;
     }
 
-    public function info($key = null, $default = null)
+    public function data($key = null, $default = null)
     {
         if ( ! is_null($key)) {
             return $this->parameters->get($key, $default);

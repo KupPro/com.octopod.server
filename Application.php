@@ -72,12 +72,10 @@ class Application extends Container {
         $this->singleton('handler', 'Octopod\Octophp\Handler');
         $this->singleton('response', 'Octopod\Octophp\Response');
         $this->singleton('uri', 'Octopod\Octophp\Uri');
+        $this->singleton('log', 'Octopod\Octophp\Log\Log');
 
         $this->bind('template', 'Octopod\Octophp\Template');
         $this->bind('view', 'Octopod\Octophp\View');
-
-        // temp
-        Octopod::init($this['request']);
     }
 
     public function registerAliases()
@@ -87,6 +85,8 @@ class Application extends Container {
 
     public function platform()
     {
+        // temp
+        Octopod::init($this['request']);
         $handlerId = $this['request']->getHandler();
 
         try {

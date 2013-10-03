@@ -2,8 +2,6 @@
 
 namespace Octopod\Octophp;
 
-use Octopod\Octophp\Facades\App;
-use Octopod\Octophp\Facades\Config;
 
 class Octopod {
     public static $fonts;
@@ -33,20 +31,20 @@ class Octopod {
 
     static function init(Request $request)
     {
-        static::$touch = $request->info('touch');
-        static::$language = $request->info('language');
-        static::$applicationId = $request->info('applicationId');
-        static::$platform = $request->info('platform');
-        static::$appString = $request->info('appString');
-        static::$version = $request->info('version');
-        static::$installationId = $request->info('installationId');
-        static::$client = $request->info('client');
-        static::$height = $request->info('height');
-        static::$width = $request->info('width');
+        static::$touch = $request->data('touch');
+        static::$language = $request->data('language');
+        static::$applicationId = $request->data('applicationId');
+        static::$platform = $request->data('platform');
+        static::$appString = $request->data('appString');
+        static::$version = $request->data('version');
+        static::$installationId = $request->data('installationId');
+        static::$client = $request->data('client');
+        static::$height = $request->data('height');
+        static::$width = $request->data('width');
 
         static::$screenId = static::detectScreenId();
 
-        $generatedPath = App::path('app').Config::get('paths.generated').'/';
+        $generatedPath = Facades\App::path('generated').'/';
 
         if (file_exists($generatedPath."data/fonts.php")) {
             static::$fonts = include($generatedPath."data/fonts.php");
@@ -55,18 +53,18 @@ class Octopod {
             static::$images = include($generatedPath."data/images.php");
         }
 
-        static::$imgPath = ((Config::get('imagesUrl') === 'auto') ? static::cutPathForImages() : Config::get('imagesUrl')).static::$screenId."/";
+        static::$imgPath = ((Facades\Config::get('imagesUrl') === 'auto') ? static::cutPathForImages() : Facades\Config::get('imagesUrl')).static::$screenId."/";
     }
 
     static function detectScreenId()
     {
-        foreach (Config::get('screen') as $key => $scr) {
+        foreach (Facades\Config::get('screen') as $key => $scr) {
             if (static::$width >= $scr['minWidth'] && static::$width <= $scr['maxWidth'] && static::$height >= $scr['minHeight'] && static::$height <= $scr['maxHeight']) {
                 return $key;
             }
         }
 
-        return Config::get('default.screen');
+        return Facades\Config::get('default.screen');
     }
 
     static function iPath($imageKey)
@@ -91,22 +89,22 @@ class Octopod {
 
     static function octoWPX($value)
     {
-        $screen = Config::get('screen');
+        $screen = Facades\Config::get('screen');
 
-        return round($value / ($screen[Config::get('scaleScreen')]['optimalWidth'] / $screen[static::$screenId]['optimalWidth'])).'px';
+        return round($value / ($screen[Facades\Config::get('scaleScreen')]['optimalWidth'] / $screen[static::$screenId]['optimalWidth'])).'px';
     }
 
     static function octoHPX($value)
     {
-        $screen = Config::get('screen');
+        $screen = Facades\Config::get('screen');
 
-        return round($value / ($screen[Config::get('scaleScreen')]['optimalHeight'] / $screen[static::$screenId]['optimalHeight'])).'px';
+        return round($value / ($screen[Facades\Config::get('scaleScreen')]['optimalHeight'] / $screen[static::$screenId]['optimalHeight'])).'px';
     }
 
     private static function cutPathForImages()
     {
         // @todo: make it use config generated path
-        $url = App::make('uri')->create('app/generated/images/');
+        $url = Facades\App::make('uri')->create('app/generated/images/');
 
         return $url;
     }
@@ -114,7 +112,7 @@ class Octopod {
     static function style($style)
     {
         $styleString = '';
-        $styles = Config::get("style.$style");
+        $styles = Facades\Config::get("style.$style");
 
         if (is_array($styles) and count($styles)) {
             foreach ($styles as $key => $value) {

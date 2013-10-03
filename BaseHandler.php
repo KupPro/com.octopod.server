@@ -47,7 +47,7 @@ class BaseHandler {
 
     protected function takeParam($key)
     {
-        return $this->request->info($key);
+        return $this->request->data($key);
     }
 
 }
