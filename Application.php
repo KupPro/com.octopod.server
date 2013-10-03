@@ -152,10 +152,10 @@ class Application extends Container {
             include $this->path('octophp').'/init/init.php';
         }
 
-        $generatedPath = Facades\App::path('app').Facades\Config::get('paths.generated').'/';
-        $resourcesPath = Facades\App::path('app').Facades\Config::get('paths.resources').'/';
+        $generatedPath = Facades\App::path('generated').'/';
+        $resourcesPath = Facades\App::path('resources').'/';
 
-        include $this->path('octophp').'/init/serveImage.php';
+        include Facades\App::path('octophp').'/init/serveImage.php';
 
         $imagesInitList = include $generatedPath . 'data/imagesInitList.php';
 
@@ -181,9 +181,10 @@ class Application extends Container {
         if (array_key_exists($path, $paths)) {
             return $paths[$path];
         }
-        else {
-            throw new OctophpException("Cannot find path for key '$path'.");
+        if ($cPath = Facades\Config::get("paths.$path")) {
+            return $this->path().$cPath;
         }
+        throw new OctophpException("Cannot find path for key '$path'.");
     }
 
 }
