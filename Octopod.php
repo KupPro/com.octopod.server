@@ -31,16 +31,16 @@ class Octopod {
 
     static function init(Request $request)
     {
-        static::$touch = $request->data('touch');
-        static::$language = $request->data('language');
-        static::$applicationId = $request->data('applicationId');
-        static::$platform = $request->data('platform');
-        static::$appString = $request->data('appString');
-        static::$version = $request->data('version');
-        static::$installationId = $request->data('installationId');
-        static::$client = $request->data('client');
-        static::$height = $request->data('height');
-        static::$width = $request->data('width');
+        static::$touch = $request->info('touch');
+        static::$language = $request->info('language');
+        static::$applicationId = $request->info('applicationId');
+        static::$platform = $request->info('platform');
+        static::$appString = $request->info('appString');
+        static::$version = $request->info('version');
+        static::$installationId = $request->info('installationId');
+        static::$client = $request->info('client');
+        static::$height = $request->info('height');
+        static::$width = $request->info('width');
 
         static::$screenId = static::detectScreenId();
 

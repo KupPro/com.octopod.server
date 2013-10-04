@@ -59,7 +59,7 @@ class Request {
     {
         // Check for $_GET handlerId param, if not found check in request data
         if (is_null($handler = $this->symfonyRequest->get('handlerId'))) {
-            $handler = $this->data('handlerId');
+            $handler = $this->info('handlerId');
         }
         if (empty($handler)) {
             $handler = Facades\Config::get('default.handler');
@@ -68,7 +68,7 @@ class Request {
         return $handler;
     }
 
-    public function data($key = null, $default = null)
+    public function info($key = null, $default = null)
     {
         if ( ! is_null($key)) {
             return $this->parameters->get($key, $default);
