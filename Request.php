@@ -40,11 +40,17 @@ class Request {
 
     protected function prepareRequest()
     {
-        $data = $this->symfonyRequest->getContent();
-        $data = $this->data = @get_object_vars(json_decode(urldecode($data)));
+        $this->data = $this->symfonyRequest->getContent();
+        $data = json_decode($this->data, true);
 
-        if (! is_null($data)) {
+        // @todo: check for json errors
+
+
+        if (is_array($data)) {
             $this->parameters->add($data);
+        }
+        else {
+            // @todo: log error
         }
     }
 
