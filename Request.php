@@ -38,7 +38,7 @@ class Request {
         $this->prepareRequest();
     }
 
-    public function prepareRequest()
+    protected function prepareRequest()
     {
         $data = $this->symfonyRequest->getContent();
         $data = $this->data = @get_object_vars(json_decode(urldecode($data)));
