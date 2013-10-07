@@ -32,9 +32,7 @@
     <?php if (!is_null(Response::get('systemEvents'))): ?>
         <systemEvents>
             <![CDATA[
-            <systemEventsContent>
                 <?= Response::get('systemEvents')->render(); ?>
-            </systemEventsContent>
             ]]>
         </systemEvents>
     <?php endif; ?>
