@@ -10,4 +10,10 @@ class Facade extends IlluminateFacade {
 
     protected static $resolvedInstance;
 
+    protected static function resolveFacadeInstance($name)
+    {
+        if (is_object($name)) return $name;
+        return static::$app->make($name);
+    }
+
 }
