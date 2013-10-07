@@ -81,6 +81,11 @@ class Response {
 
     }
 
+    public static function addAlert($alert)
+    {
+
+    }
+
     public static function addQuery($query)
     {
 
