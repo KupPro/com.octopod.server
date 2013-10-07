@@ -67,6 +67,10 @@ class Response {
 
     }
 
+    public static function setSystemEvents($template){
+
+    }
+
     public static function addView($view)
     {
 
