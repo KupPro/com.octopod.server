@@ -72,6 +72,17 @@ class Response implements Renderable {
     }
 
     /**
+     * @param Renderable $template
+     * @throws \InvalidArgumentException
+     */
+    public function setSystemEvents($template){
+        if ( ! $template instanceof Renderable) {
+            throw new \InvalidArgumentException("SystemEvents should implement Renderable interface.");
+        }
+        $this->systemEvents = $template;
+    }
+
+    /**
      * @param Renderable $view
      * @throws \InvalidArgumentException
      */
