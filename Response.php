@@ -28,6 +28,7 @@ class Response implements Renderable {
     protected $badgeCounter;
 
     protected $actions;
+    protected $alerts;
     protected $scripts;
     protected $systemEvents;
 
@@ -89,6 +90,11 @@ class Response implements Renderable {
             'filename' => $filename,
             'url' => $url
         );
+    }
+
+    public function addAlert($alert)
+    {
+        $this->alerts[] = $alert;
     }
 
     /**

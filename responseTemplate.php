@@ -52,6 +52,13 @@
 
         <?php endif; ?>
 
+        <?php if (sizeof(Response::get('alerts'))): ?>
+            <?php foreach (Response::get('alerts') as $alert): ?>
+                <action_systemAlert message="<?= $alert ?>" okText="OK"/>
+            <?php endforeach; ?>
+
+        <?php endif; ?>
+
 
         <?php if (sizeof(Response::get('settings'))): ?>
             <?php foreach (Response::get('settings') as $set => $val): ?>
