@@ -7,7 +7,7 @@
 
     <?php //========Views=========?>
     <?php if (sizeof(Response::get('views'))): ?>
-        <views defaultViewId="<?= Config::get('defaultViewId') ?>">
+        <views defaultViewId="<?= Config::get('default.view') ?>">
             <?php foreach (Response::get('views') as $view): ?>
                 <view cache="<?= ($view->cached()) ? "true": "false" ?>" id="<?= $view->id() ?>">
                     <![CDATA[
@@ -27,14 +27,14 @@
         </resources>
     <?php endif; ?>
 
-    <?php //========System events=========?>
 
+    <?php //========System events========= ?>
     <?php if (!is_null(Response::get('systemEvents'))): ?>
         <systemEvents>
             <![CDATA[
-            <eventsContent>
+            <systemEventsContent>
                 <?= Response::get('systemEvents')->render(); ?>
-            </eventsContent>
+            </systemEventsContent>
             ]]>
         </systemEvents>
     <?php endif; ?>
@@ -56,8 +56,8 @@
 
 
         <?php if (sizeof(Response::get('settings'))): ?>
-            <?php foreach (Response::get('settings') as $set): ?>
-                <action_setSetting key="<?= $set['name'] ?>" value="<?= $set['value'] ?>"/>
+            <?php foreach (Response::get('settings') as $set => $val): ?>
+                <action_setSetting key="<?= $set ?>" value="<?= $val ?>"/>
             <?php endforeach; ?>
         <?php endif; ?>
 
@@ -90,9 +90,7 @@
 
     <?php //========Scripts file=========?>
     <?php if (!is_null(Response::get('scripts'))): ?>
-
         <?= Response::get('scripts')->render(); ?>
-
     <?php endif; ?>
 
 </octopod>

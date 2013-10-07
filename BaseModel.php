@@ -27,7 +27,7 @@ abstract class BaseModel {
 
         foreach ($dataArray as $key => $value) {
             if (!$this->enteredFields[$key]) {
-                print "Warning! Received parameter '" . $key . "' left unused!\n"; #TODO Переделать на эксепшен
+//                print "Warning! Received parameter '" . $key . "' left unused!\n"; #TODO Переделать на эксепшен
             }
         }
     }
