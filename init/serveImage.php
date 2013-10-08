@@ -59,7 +59,7 @@ function convertImage($source, $dest, $divider)
                 imagejpeg($tmp, $dest, 100);
                 break;
             case 3:
-                imagepng($tmp, $dest, 0);
+                imagepng($tmp, $dest, 9);
                 break;
         }
 
