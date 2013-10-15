@@ -23,6 +23,22 @@ class Request {
 
     }
 
+    public static function paramArray($key = null)
+    {
+
+    }
+
+    public static function attach($key = null, $default = null)
+    {
+
+    }
+
+    public static function saveAttachToFile($key, $path)
+    {
+
+    }
+
+
     public static function getSymfonyRequest()
     {
 

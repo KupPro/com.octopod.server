@@ -112,6 +112,14 @@ class Request {
         }
     }
 
+    public function saveAttachToFile($key, $path) {
+        if ( ! is_null($key) && ! is_null($path)) {
+            return file_put_contents($path, $this->parameters->get("files[$key]", null, true));
+        } else {
+            return false;
+        }
+    }
+
     public function getSymfonyRequest()
     {
         return $this->symfonyRequest;
