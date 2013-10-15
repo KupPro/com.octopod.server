@@ -16,7 +16,7 @@ abstract class BaseModel {
     function __construct($dataArray)
     {
         foreach (static::$fields as $key => $field) {
-            if (isset ($dataArray[$key]) && !is_null($dataArray[$key])) #TODO Провалидировать условие
+            if (array_key_exists($key, $dataArray))
             {
                 $this->data[$key] = $dataArray[$key];
                 $this->enteredFields[$key] = true;
