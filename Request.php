@@ -83,6 +83,35 @@ class Request {
         }
     }
 
+    public function paramArray($key)
+    {
+        if (!is_null($key)) {
+
+            foreach (($this->parameters->get("parameters")) as $parameterKey => $value) {
+                $splitResult = explode("_", $parameterKey);
+                if (sizeof($splitResult)>1)
+                {
+                    list ($pKey, $pValue) = $splitResult;
+                    if ($pKey == $key)
+                        $result[$pValue] = $value;
+                }
+            }
+            if (sizeof($result))
+                return $result;
+        }
+
+        return false;
+
+    }
+
+    public function attach($key = null, $default = null) {
+        if ( ! is_null($key)) {
+            return $this->parameters->get("files[$key]", $default, true);
+        } else {
+            return $this->parameters->get("files");
+        }
+    }
+
     public function getSymfonyRequest()
     {
         return $this->symfonyRequest;
