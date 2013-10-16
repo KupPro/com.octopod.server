@@ -77,7 +77,7 @@ class Request {
 
     public function param($key = null, $default = null) {
         if ( ! is_null($key)) {
-            return $this->parameters->get("parameters[$key]", $default, true);
+            return urldecode($this->parameters->get("parameters[$key]", $default, true));
         } else {
             return $this->parameters->get("parameters");
         }
@@ -93,7 +93,7 @@ class Request {
                 {
                     list ($pKey, $pValue) = $splitResult;
                     if ($pKey == $key)
-                        $result[$pValue] = $value;
+                        $result[$pValue] = urldecode($value);
                 }
             }
             if (sizeof($result))
