@@ -35,6 +35,9 @@ class Response implements Renderable {
     protected $resources;
     protected $queries;
 
+    protected $resourcesByteSize;
+
+
     public function __construct()
     {
         $this->sessionId = '';
@@ -95,12 +98,16 @@ class Response implements Renderable {
         $this->views[] = $view;
     }
 
-    public function addResource($filename, $url)
+    public function addResource($filename, $url, $localPath = null, $countByteSize = false)
     {
         $this->resources[] = array(
             'filename' => $filename,
             'url' => $url
         );
+        if ($countByteSize)
+        {
+            $this->resourcesByteSize += filesize($localPath);
+        }
     }
 
     public function addAlert($alert)
@@ -130,6 +137,7 @@ class Response implements Renderable {
 
     public function send()
     {
+        header("octopod_size: ".(strlen($this->render()) + intval($this->resourcesByteSize)));
         echo $this->render();
     }
 

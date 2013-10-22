@@ -92,7 +92,8 @@ class Response {
 
     }
 
-    public static function addResource($filename, $url)
+    public static function addResource($filename, $url, $localPath = null, $countByteSize = false)
+
     {
 
     }
