@@ -3,6 +3,7 @@
 namespace Octopod\Octophp;
 
 use Illuminate\Container\Container;
+use Octopod\Octophp\Error\Handler;
 use Octopod\Octophp\Facades\Facade;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -50,6 +51,9 @@ class Application extends Container {
      */
     public function registerProviders()
     {
+        // Error Handler
+        $this->instance('error', $this->make('Octopod\Octophp\Error\Handler')->register());
+
         $this->singleton('Symfony\Component\HttpFoundation\Request', function () {
             return SymfonyRequest::createFromGlobals();
         });
