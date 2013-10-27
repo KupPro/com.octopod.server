@@ -105,6 +105,7 @@ return array(
         'App' => 'Octopod\Octophp\Facades\App',
         'Handler' => 'Octopod\Octophp\Facades\Handler',
         'Event' => 'Octopod\Octophp\Facades\Event',
+        'Log' => 'Octopod\Octophp\Facades\Log',
         'Request' => 'Octopod\Octophp\Facades\Request',
         'Response' => 'Octopod\Octophp\Facades\Response',
         'Config' => 'Octopod\Octophp\Facades\Config',

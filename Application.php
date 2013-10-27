@@ -54,6 +54,7 @@ class Application extends Container {
         // Error Handler
         $this->instance('error', $this->make('Octopod\Octophp\Error\Handler')->register());
 
+        $this->singleton('log', 'Octopod\Octophp\Log\Log');
         $this->singleton('Symfony\Component\HttpFoundation\Request', function () {
             return SymfonyRequest::createFromGlobals();
         });

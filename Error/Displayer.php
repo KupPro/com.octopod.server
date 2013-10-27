@@ -9,13 +9,14 @@ class Displayer {
 
     public function display(Exception $e)
     {
+        echo '<pre>';
         echo $this->formatException($e);
     }
 
-    protected function formatException(Exception $e)
+    public function formatException(Exception $e)
     {
-        $location = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
-        return 'Error: '.$location;
+        $message = get_class($e).': '.$e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+        return $message;
     }
 
 }

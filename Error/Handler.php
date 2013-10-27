@@ -17,6 +17,7 @@ class Handler {
 
     public function register()
     {
+        error_reporting(0);
         $this->registerErrorHandler();
         $this->registerExceptionHandler();
         $this->registerShutdownHandler();
@@ -43,13 +44,13 @@ class Handler {
         if (error_reporting() & $level)
         {
             $e = new ErrorException($message, $level, 0, $file, $line);
-
             $this->handleException($e);
         }
     }
 
     public function handleException($exception)
     {
+        \Log::error($this->displayer->formatException($exception));
         $this->displayer->display($exception);
         $this->halt();
     }
