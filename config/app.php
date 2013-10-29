@@ -4,6 +4,8 @@ return array(
 
     'debug' => true,
 
+    'timezone' => 'Europe/Moscow',
+
     'imagesUrl' => 'auto',
 
     'default' => array(

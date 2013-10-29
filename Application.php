@@ -3,7 +3,6 @@
 namespace Octopod\Octophp;
 
 use Illuminate\Container\Container;
-use Octopod\Octophp\Error\Handler;
 use Octopod\Octophp\Facades\Facade;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -42,6 +41,9 @@ class Application extends Container {
         $this->registerProviders();
         // Alias classes into global namespace
         $this->registerAliases();
+
+        // Set timezone
+        date_default_timezone_set(\Config::get('timezone'));
 
         $this->booted = true;
     }
