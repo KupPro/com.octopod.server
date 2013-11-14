@@ -6,6 +6,12 @@ use Illuminate\Container\Container;
 use Octopod\Octophp\Facades\Facade;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+define("OCTOLOG_NONE", 0);
+define("OCTOLOG_TEXT", 1);
+define("OCTOLOG_ALERT", 2);
+define("OCTOLOG_MAIL", 4);
+define("OCTOLOG_ALL", 7);
+
 class OctophpException extends \Exception {
 }
 
@@ -95,19 +101,16 @@ class Application extends Container {
     public function platform()
     {
         $handlerId = $this['request']->getHandler();
-
         try {
             $this['handler']->run($handlerId);
         } catch (HandlerNotFoundException $e) {
             try {
                 $view = $this['view']->load($handlerId);
                 $this['response']->addView($view);
+                $this['response']->setType("viewRequest");
             } catch (ViewNotFoundException $e) {
-
-                // nothing found (no handler, no view)
-                // what to do then? @todo:
-                throw new \Exception('handler not found');
-
+                \Log::error("system", "Handler or view not found for handlerId=".$handlerId);
+                die();
             }
         }
 
@@ -128,6 +131,8 @@ class Application extends Container {
             '/' => array($this, 'platform'),
             'init' => array($this, 'init'),
             'init/scriptoffset' => array($this, 'init_scriptoffset'),
+            'log' => array($this, 'logViewer'),
+            'logFile' => array($this, 'logFileViewer'),
         );
 
         if (isset($routes[$path]) AND is_callable($routes[$path])) {
@@ -181,6 +186,17 @@ class Application extends Container {
         $output = array('offset' => $offset, 'success' => $success);
         echo json_encode($output);
     }
+    public function logViewer()
+    {
+        include $this->path('octophp').'/LogViewer/index.php';
+    }
+
+    public function logFileViewer()
+    {
+        include $this->path('octophp').'/LogViewer/file.php';
+    }
+
+
 
     public function path($path = 'app')
     {

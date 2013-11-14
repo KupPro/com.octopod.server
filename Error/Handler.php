@@ -33,6 +33,8 @@ class Handler {
         set_exception_handler(array($this, 'handleException'));
     }
 
+
+
     protected function registerShutdownHandler()
     {
         register_shutdown_function(array($this, 'handleShutdown'));
@@ -50,8 +52,8 @@ class Handler {
 
     public function handleException($exception)
     {
-        \Log::error($this->displayer->formatException($exception));
-        $this->displayer->display($exception);
+        \Log::error("system", $this->displayer->formatException($exception));
+//        $this->displayer->display($exception);
         $this->halt();
     }
 

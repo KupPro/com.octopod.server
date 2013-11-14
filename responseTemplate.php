@@ -1,15 +1,15 @@
 <octopod sessionId="<?= Response::get('sessionId') ?>"
-         debug="<?= (Response::get('debug')) ? "true": "false" ?>"
+         responseType="<?= Response::get('responseType') ?>"
+         debug="<?= (Response::get('debug')) ? "true" : "false" ?>"
          orientation="<?= Response::get('orientation') ?>"
          cacheImagesCounter="<?= Response::get('cacheImagesCounter') ?>"
          cacheMarkupCounter="<?= Response::get('cacheMarkupCounter') ?>"
          installationId="<?= Response::get('installationId') ?>">
-
     <?php //========Views=========?>
     <?php if (sizeof(Response::get('views'))): ?>
         <views defaultViewId="<?= Config::get('default.view') ?>">
             <?php foreach (Response::get('views') as $view): ?>
-                <view cache="<?= ($view->cached()) ? "true": "false" ?>" id="<?= $view->id() ?>">
+                <view cache="<?= ($view->cached()) ? "true" : "false" ?>" id="<?= $view->id() ?>">
                     <![CDATA[
                     <?= $view->render(); ?>
                     ]]>
@@ -17,7 +17,6 @@
             <?php endforeach; ?>
         </views>
     <?php endif; ?>
-
     <?php //========Resources=========?>
     <?php if (sizeof(Response::get('resources'))): ?>
         <resources>
@@ -26,28 +25,24 @@
             <?php endforeach; ?>
         </resources>
     <?php endif; ?>
-
-
+    <?php //========System events========= ?>
     <?php //========System events========= ?>
     <?php if (!is_null(Response::get('systemEvents'))): ?>
         <systemEvents>
             <![CDATA[
-                <?= Response::get('systemEvents')->render(); ?>
+            <?= Response::get('systemEvents')->render(); ?>
             ]]>
         </systemEvents>
     <?php endif; ?>
-
-
-
     <?php //========Actions=========?>
     <actions>
         <?php if (!is_null(Response::get('badgeCounter'))): ?>
-            <action_setBadge counter="<?= Response::get('badgeCounter') ?>"/>
+        <action_setBadge counter="<?= Response::get('badgeCounter') ?>"/>
         <?php endif; ?>
 
         <?php if (sizeof(Response::get('variables'))): ?>
             <?php foreach (Response::get('variables') as $var): ?>
-                <action_setVariable key="<?= $var['name'] ?>" value="<?= $var['value'] ?>"/>
+        <action_setVariable key="<?= $var['name'] ?>" value="<?= $var['value'] ?>"/>
             <?php endforeach; ?>
 
         <?php endif; ?>
@@ -84,10 +79,10 @@
 
     <?php //========SQLITE dump=========?>
 
-    <?php if ((Response::get('queries'))!=""): ?>
+    <?php if ((Response::get('queries')) != ""): ?>
         <data>
             <![CDATA[
-            <?=Response::get('queries')?>
+            <?= Response::get('queries') ?>
             ]]>
         </data>
     <?php endif; ?>

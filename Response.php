@@ -36,6 +36,7 @@ class Response implements Renderable {
     protected $queries;
 
     protected $resourcesByteSize;
+    protected $responseType;
 
 
     public function __construct()
@@ -123,6 +124,11 @@ class Response implements Renderable {
         $this->queries .= $query;
     }
 
+    public function setType($type)
+    {
+        $this->responseType = $type;
+    }
+
     public function render() {
         ob_start();
 
@@ -138,7 +144,11 @@ class Response implements Renderable {
     public function send()
     {
         header("octopod_size: ".(strlen($this->render()) + intval($this->resourcesByteSize)));
-        echo $this->render();
+        $resultXml = $this->render();
+
+        echo $resultXml;
+
+        \Log::info($this->responseType, $resultXml);
     }
 
     /* TEMPORARY */

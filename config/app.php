@@ -2,7 +2,8 @@
 
 return array(
 
-    'debug' => true,
+    'mode' => 'debug',
+//    'mode' => 'release',
 
     'timezone' => 'Europe/Moscow',
 
@@ -21,6 +22,7 @@ return array(
         'resources' => '/resources',
         'generated' => '/generated',
         'storage' => '/storage',
+        'log' => '/storage/log',
     ),
 
     //'scaleScreen' => '640x960',
@@ -114,5 +116,23 @@ return array(
         'Template' => 'Octopod\Octophp\Facades\Template',
         'View' => 'Octopod\Octophp\Facades\View',
         'Octopod' => 'Octopod\Octophp\Octopod',
-    )
+    ),
+
+    'logTypes' => array(
+    'xmlStructureError' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_TEXT),
+    'sqlError' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'extResourceError' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'initError' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'xsdValidationWarning' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'sqlWarning' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'extResource' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'userLog' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALERT | OCTOLOG_MAIL),
+    'serverRequest' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'viewRequest' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'init' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'unknown' => array ("debug" => OCTOLOG_ALL ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+    'system' => array ("debug" => OCTOLOG_ALL  ^ OCTOLOG_MAIL, "release" =>  OCTOLOG_ALL),
+
+),
+
 );

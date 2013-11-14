@@ -7,14 +7,16 @@ use Exception;
 
 class Displayer {
 
-    public function display(Exception $e)
+    public function display(Exception $e)  //Deprecated, not used
     {
-        echo '<pre>';
-        echo $this->formatException($e);
+//        echo '<pre>';
+//        echo $this->formatException($e);
 
         // здесь можно работать с Response
         // затем вывести Response вот так ↓
-        //\Response::send();
+        //
+        \Response::addAlert($this->formatException($e));
+        \Response::send();
     }
 
     public function formatException(Exception $e)

@@ -28,6 +28,7 @@ class Handler {
         if (empty($handlerPath)) {
             throw new HandlerNotFoundException();
         }
+        $this->app['response']->setType("serverRequest");
 
         include $handlerPath;
     }
