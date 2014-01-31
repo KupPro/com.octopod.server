@@ -12,26 +12,36 @@ define("OCTOLOG_ALERT", 2);
 define("OCTOLOG_MAIL", 4);
 define("OCTOLOG_ALL", 7);
 
-class OctophpException extends \Exception {
+class OctophpException extends \Exception
+{
 }
 
-class Application extends Container {
+class Application extends Container
+{
 
     protected $booted = false;
 
-    public function __construct($applicationPath)
+    public function __construct($applicationPath , $dirPath = null, $clientAppPath = null)
     {
         $this['app'] = $this;
 
         // Check if $applicationPath exists
-        $applicationPath = realpath($applicationPath);
-        if (empty($applicationPath)) {
+
+        if($clientAppPath != null) {
+            $applicationPathCheck = realpath($dirPath . $clientAppPath);
+        } else {
+            $applicationPathCheck = realpath($applicationPath);
+        }
+
+        if (empty($applicationPathCheck)) {
             throw new OctophpException("Application Path doesn't exists. Setup your application directory.");
         }
 
         // Setup application and core paths
         $this['paths'] = array(
             'app' => $applicationPath,
+            'dir' => $dirPath,
+            'clientAppPath' => $clientAppPath,
             'octophp' => __DIR__
         );
     }
@@ -76,8 +86,12 @@ class Application extends Container {
             $config = $app->make('Octopod\Octophp\Config');
 
             // Add application and core repository
-            $config->addRepository($app->path('app').'/config/');
-            $config->addRepository($app->path('octophp').'/config/');
+            if ($app->path('clientAppPath') == null) {
+                $config->addRepository($app->path('dir') . $app->path('app') . '/config/'); // todo: ololo
+            } else {
+                $config->addRepository($app->path('dir') . $app->path('clientAppPath') . '/config/');
+            }
+            $config->addRepository($app->path('octophp') . '/config/');
 
             return $config;
         });
@@ -109,7 +123,7 @@ class Application extends Container {
                 $this['response']->addView($view);
                 $this['response']->setType("viewRequest");
             } catch (ViewNotFoundException $e) {
-                \Log::error("system", "Handler or view not found for handlerId=".$handlerId);
+                \Log::error("system", "Handler or view not found for handlerId=" . $handlerId);
                 die();
             }
         }
@@ -142,7 +156,7 @@ class Application extends Container {
 
     public function init()
     {
-        include $this->path('octophp').'/init/view.php';
+        include $this->path('octophp') . '/init/view.php';
     }
 
     public function init_scriptoffset()
@@ -161,13 +175,21 @@ class Application extends Container {
         if (empty($url)) return;
 
         if ($offset == 0) {
-            include $this->path('octophp').'/init/init.php';
+            include $this->path('octophp') . '/init/init.php';
         }
 
-        $generatedPath = Facades\App::path('generated').'/';
-        $resourcesPath = Facades\App::path('resources').'/';
+//        $generatedPath = Facades\App::path('generated') . '/'; // todo: ololo
+//        $resourcesPath = Facades\App::path('resources') . '/'; // todo: ololo
 
-        include Facades\App::path('octophp').'/init/serveImage.php';
+        if ($this->path('clientAppPath') != null) {
+            $generatedPath = $this->path('dir') . $this->path('clientAppPath') . Config::get('paths.generated') . '/';
+            $resourcesPath = $this->path('dir') . $this->path('clientAppPath') . Config::get('paths.resources') . '/';
+        } else {
+            $generatedPath = $this->path('app') . Config::get('paths.generated') . '/';
+            $resourcesPath = $this->path('app') . Config::get('paths.resources') . '/';
+        }
+
+        include Facades\App::path('octophp') . '/init/serveImage.php';
 
         $imagesInitList = include $generatedPath . 'data/imagesInitList.php';
 
@@ -176,6 +198,7 @@ class Application extends Container {
         serveImage($imagesInitList[$offset]);
 
         $offset = $offset + $step;
+
         if ($offset >= $count) {
             saveImageListToArray();
             $success = 1;
@@ -186,16 +209,16 @@ class Application extends Container {
         $output = array('offset' => $offset, 'success' => $success);
         echo json_encode($output);
     }
+
     public function logViewer()
     {
-        include $this->path('octophp').'/LogViewer/index.php';
+        include $this->path('octophp') . '/LogViewer/index.php';
     }
 
     public function logFileViewer()
     {
-        include $this->path('octophp').'/LogViewer/file.php';
+        include $this->path('octophp') . '/LogViewer/file.php';
     }
-
 
 
     public function path($path = 'app')
@@ -205,7 +228,7 @@ class Application extends Container {
             return $paths[$path];
         }
         if ($cPath = Facades\Config::get("paths.$path")) {
-            return $this->path().$cPath;
+            return $this->path() . $cPath;
         }
         throw new OctophpException("Cannot find path for key '$path'.");
     }

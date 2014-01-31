@@ -5,7 +5,8 @@ namespace Octopod\Octophp;
 use Octopod\Octophp\Facades\App;
 use Octopod\Octophp\Facades\Config;
 
-class Octopod {
+class Octopod
+{
     public static $fonts;
     public static $images;
     public static $screenId;
@@ -46,16 +47,21 @@ class Octopod {
 
         static::$screenId = static::detectScreenId();
 
-        $generatedPath = App::path('app').Config::get('paths.generated').'/';
 
-        if (file_exists($generatedPath."data/fonts.php")) {
-            static::$fonts = include($generatedPath."data/fonts.php");
-        }
-        if (file_exists($generatedPath."data/images.php")) {
-            static::$images = include($generatedPath."data/images.php");
+        if (App::path('clientAppPath') != null) {
+            $generatedPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.generated') . '/';
+        } else {
+            $generatedPath = App::path('app') . Config::get('paths.generated') . '/';
         }
 
-        static::$imgPath = ((Config::get('imagesUrl') === 'auto') ? static::cutPathForImages() : Config::get('imagesUrl')).static::$screenId."/";
+        if (file_exists($generatedPath . "data/fonts.php")) {
+            static::$fonts = include($generatedPath . "data/fonts.php");
+        }
+        if (file_exists($generatedPath . "data/images.php")) {
+            static::$images = include($generatedPath . "data/images.php");
+        }
+
+        static::$imgPath = ((Config::get('imagesUrl') === 'auto') ? static::cutPathForImages() : Config::get('imagesUrl')) . static::$screenId . "/";
     }
 
     static function detectScreenId()
@@ -71,7 +77,7 @@ class Octopod {
 
     static function iPath($imageKey)
     {
-        return static::$imgPath.$imageKey;
+        return static::$imgPath . $imageKey;
     }
 
     static function iWidth($imageKey)
@@ -93,20 +99,28 @@ class Octopod {
     {
         $screen = Config::get('screen');
 
-        return round($value / ($screen[Config::get('scaleScreen')]['optimalWidth'] / $screen[static::$screenId]['optimalWidth'])).'px';
+        return round($value / ($screen[Config::get('scaleScreen')]['optimalWidth'] / $screen[static::$screenId]['optimalWidth'])) . 'px';
     }
 
     static function octoHPX($value)
     {
         $screen = Config::get('screen');
 
-        return round($value / ($screen[Config::get('scaleScreen')]['optimalHeight'] / $screen[static::$screenId]['optimalHeight'])).'px';
+        return round($value / ($screen[Config::get('scaleScreen')]['optimalHeight'] / $screen[static::$screenId]['optimalHeight'])) . 'px';
     }
 
     private static function cutPathForImages()
     {
         // @todo: make it use config generated path
-        $url = App::make('uri')->create('app/generated/images/');
+//        $url = App::make('uri')->create('app/generated/images/'); // todo: ololo
+
+        if (App::path('clientAppPath') != null) {
+            $appPath = App::path('clientAppPath');
+        } else {
+            $appPath = App::path('app');
+        }
+
+        $url = App::make('uri')->create($appPath . Config::get('paths.generated') . '/images/');
 
         return $url;
     }

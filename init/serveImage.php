@@ -3,12 +3,21 @@
 use Octopod\Octophp\Facades\Config;
 use Octopod\Octophp\Facades\App;
 
-$generatedPath = App::path('app').Config::get('paths.generated').'/';
-$resourcesPath = App::path('app').Config::get('paths.resources').'/';
+if (App::path('clientAppPath') != null) {
+    $generatedPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.generated') . '/';
+    $resourcesPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.resources') . '/';
+} else {
+    $generatedPath = App::path('app') . Config::get('paths.generated') . '/'; // todo: ololo
+    $resourcesPath = App::path('app') . Config::get('paths.resources') . '/'; // todo: ololo
+}
 
 function serveImage($imageInit)
 {
-    $generatedPath = App::path('app').Config::get('paths.generated').'/';
+    if (App::path('clientAppPath') != null) {
+        $generatedPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.generated') . '/';
+    } else {
+        $generatedPath = App::path('app') . Config::get('paths.generated') . '/'; // todo: ololo
+    }
 
     $imageInfo = @getimagesize($imageInit['sourcePath']);
     if ($imageInfo) {
@@ -76,7 +85,12 @@ function convertImage($source, $dest, $divider)
 
 function saveImageListToArray()
 {
-    $generatedPath = App::path('app').Config::get('paths.generated').'/';
+    if (App::path('clientAppPath') != null) {
+        $generatedPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.generated') . '/';
+    } else {
+        $generatedPath = App::path('app') . Config::get('paths.generated') . '/'; // todo: ololo
+    }
+
 
     $imagesList = explode("\n", file_get_contents($generatedPath . 'data/images.list', 'a+'));
     foreach ($imagesList as $imageString) {

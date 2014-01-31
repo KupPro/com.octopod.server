@@ -1,35 +1,41 @@
 <?php
 
-use Octopod\Octophp\Facades\Config;
 use Octopod\Octophp\Facades\App;
+use Octopod\Octophp\Facades\Config;
 
-$generatedPath = App::path('app').Config::get('paths.generated').'/';
-$resourcesPath = App::path('app').Config::get('paths.resources').'/';
+
+if (App::path('clientAppPath') != null) {
+    $generatedPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.generated') . '/';
+    $resourcesPath = App::path('dir') . App::path('clientAppPath') . Config::get('paths.resources') . '/';
+} else {
+    $generatedPath = App::path('app') . Config::get('paths.generated') . '/'; // todo: ololo
+    $resourcesPath = App::path('app') . Config::get('paths.resources') . '/'; // todo: ololo
+}
 
 rrmdir($generatedPath);
 
 createFolderIfNotExists($generatedPath);
-createFolderIfNotExists($generatedPath.'data');
-createFolderIfNotExists($generatedPath.'images');
+createFolderIfNotExists($generatedPath . 'data');
+createFolderIfNotExists($generatedPath . 'images');
 
 $scaleScreen = Config::get("scaleScreen");
 $screen = Config::get('screen');
 
 $imageTodo = array();
 
-$scaleImagesList = filesToArray($resourcesPath.'images/' . $scaleScreen);
+$scaleImagesList = filesToArray($resourcesPath . 'images/' . $scaleScreen);
 
 if (count($screen)) {
     foreach ($screen as $screenId => $dims) {
 
-        $imagesList = filesToArray($resourcesPath.'images/' . $screenId);
+        $imagesList = filesToArray($resourcesPath . 'images/' . $screenId);
 
         if (count($imagesList))
             foreach ($imagesList as $imageInfo) {
                 $imageTodo[] = array(
                     "command" => "copy",
                     "sourcePath" => $imageInfo['fullPath'],
-                    "destPath" => $generatedPath.'images/' . $screenId . $imageInfo['localPath'],
+                    "destPath" => $generatedPath . 'images/' . $screenId . $imageInfo['localPath'],
                     "screenId" => $screenId,
                     "imageKey" => $imageInfo['localPath']);
             }
@@ -38,7 +44,7 @@ if (count($screen)) {
             $divider = $screen[$scaleScreen]["optimalWidth"] / $dims["optimalWidth"];
 
             foreach ($scaleImagesList as $scaleImageInfo) {
-                if ( ! file_exists($resourcesPath.'images/' . $screenId . $scaleImageInfo['localPath'])) {
+                if (!file_exists($resourcesPath . 'images/' . $screenId . $scaleImageInfo['localPath'])) {
                     $imageTodo[] = array(
                         "command" => "convert",
                         "sourcePath" => $scaleImageInfo['fullPath'],
@@ -84,11 +90,10 @@ function filesToArray($dir, $dirWithoutRoot = "")
 
 function rrmdir($dir)
 {
-    if (file_exists($dir))
-    {
+    if (file_exists($dir)) {
         foreach (glob($dir . '/*') as $file) {
             if (is_dir($file)) rrmdir($file); else unlink($file);
         }
-    rmdir($dir);
+        rmdir($dir);
     }
 }
