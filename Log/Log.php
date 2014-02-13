@@ -7,6 +7,7 @@ use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 
 class Log
@@ -76,8 +77,19 @@ class Log
 //       print ;
         if (!file_exists(\App::path("log")."/".date('d.m.Y', time())))
             mkdir(\App::path("log")."/".date('d.m.Y', time()));
-        file_put_contents(\App::path("log")."/".date('d.m.Y', time())."/".$level."_".$type."_".time().".log",
-            '<?php return ' . var_export(array('requestUri'=> $request->getUri(), 'requestRawData' => $request->getContent(), 'log' => $text), true) . ';' );
+
+        $headers = getallheaders();
+        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+//            $params = new ParameterBag(json_decode($_POST['mainParams'], true));
+            file_put_contents(\App::path("log")."/".date('d.m.Y', time())."/".$level."_".$type."_".time().".log",
+                '<?php return ' . var_export(array('requestUri'=> $request->getUri(), 'requestRawData' => print_r(json_decode($_POST['mainParams'], true), true), 'log' => $text), true) . ';' );
+        } else {
+            file_put_contents(\App::path("log")."/".date('d.m.Y', time())."/".$level."_".$type."_".time().".log",
+                '<?php return ' . var_export(array('requestUri'=> $request->getUri(), 'requestRawData' => $request->getContent(), 'log' => $text), true) . ';' );
+        }
+
+
+
     }
 
     public function pushAlertLog($level, $type, $text)

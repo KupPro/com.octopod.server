@@ -30,27 +30,34 @@ class Request {
      */
     protected $parameters;
 
-    public function __construct(SymfonyRequest $symfonyRequest, ParameterBag $parameters)
-    {
+    public function __construct(SymfonyRequest $symfonyRequest, ParameterBag $parameters) {
+        $headers = getallheaders();
+        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+            $params = new ParameterBag(json_decode($_POST['mainParams'], true));
+        } else $params = $parameters;
         $this->symfonyRequest = $symfonyRequest;
-        $this->parameters = $parameters;
+        $this->parameters = $params;
 
         $this->prepareRequest();
     }
 
-    protected function prepareRequest()
-    {
-        $this->data = $this->symfonyRequest->getContent();
-        $data = json_decode($this->data, true);
 
-        // @todo: check for json errors
+    protected function prepareRequest() {
+        $headers = getallheaders();
+        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+//
+        } else {
+            $this->data = $this->symfonyRequest->getContent();
+            $data = json_decode($this->data, true);
+
+            // @todo: check for json errors
 
 
-        if (is_array($data)) {
-            $this->parameters->add($data);
-        }
-        else {
-            // @todo: log error
+            if (is_array($data)) {
+                $this->parameters->add($data);
+            } else {
+                // @todo: log error
+            }
         }
     }
 
@@ -76,7 +83,7 @@ class Request {
     }
 
     public function param($key = null, $default = null) {
-        if ( ! is_null($key)) {
+        if (!is_null($key)) {
             return urldecode($this->parameters->get("parameters[$key]", $default, true));
         } else {
             return $this->parameters->get("parameters");
@@ -105,10 +112,19 @@ class Request {
     }
 
     public function attach($key = null, $default = null) {
-        if ( ! is_null($key)) {
-            return $this->parameters->get("files[$key]", $default, true);
+        $headers = getallheaders();
+        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+            if (!is_null($key)) {
+                return $_FILES[$key];
+            } else {
+                return $_FILES;
+            }
         } else {
-            return $this->parameters->get("files");
+            if (!is_null($key)) {
+                return $this->parameters->get("files[$key]", $default, true);
+            } else {
+                return $this->parameters->get("files");
+            }
         }
     }
 
