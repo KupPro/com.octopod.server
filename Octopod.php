@@ -111,14 +111,12 @@ class Octopod
 
     private static function cutPathForImages()
     {
-        // @todo: make it use config generated path
-//        $url = App::make('uri')->create('app/generated/images/'); // todo: ololo
 
         if (App::path('clientAppPath') != null) {
             $appPath = App::path('clientAppPath');
         } else {
-            $appPath = App::path('app');
-        }
+            $appPath = App::path('relativeAppPath');
+        } 
 
         $url = App::make('uri')->create($appPath . Config::get('paths.generated') . '/images/');
 

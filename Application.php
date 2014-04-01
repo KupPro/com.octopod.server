@@ -21,7 +21,7 @@ class Application extends Container
 
     protected $booted = false;
 
-    public function __construct($applicationPath , $dirPath = null, $clientAppPath = null)
+    public function __construct($rootDir, $applicationPath , $dirPath = null, $clientAppPath = null)
     {
         $this['app'] = $this;
 
@@ -30,7 +30,7 @@ class Application extends Container
         if($clientAppPath != null) {
             $applicationPathCheck = realpath($dirPath . $clientAppPath);
         } else {
-            $applicationPathCheck = realpath($applicationPath);
+            $applicationPathCheck = realpath($rootDir . '/' . $applicationPath);
         }
 
         if (empty($applicationPathCheck)) {
@@ -39,12 +39,14 @@ class Application extends Container
 
         // Setup application and core paths
         $this['paths'] = array(
-            'app' => $applicationPath,
+            'app' => $rootDir . '/' . $applicationPath,
+			'relativeAppPath' => $applicationPath,
             'dir' => $dirPath,
             'clientAppPath' => $clientAppPath,
             'octophp' => __DIR__
         );
     }
+
 
     public function boot()
     {
