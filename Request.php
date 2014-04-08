@@ -6,6 +6,23 @@ namespace Octopod\Octophp;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+if (!function_exists('getallheaders'))
+{
+    function getallheaders()
+    {
+        $headers = '';
+        foreach ($_SERVER as $name => $value)
+        {
+            if (substr($name, 0, 5) == 'HTTP_')
+            {
+                $headers[str_replace(' ', '-', str_replace('_', ' ', substr($name, 5)))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
+
 /**
  * Class Request
  *
@@ -32,7 +49,8 @@ class Request {
 
     public function __construct(SymfonyRequest $symfonyRequest, ParameterBag $parameters) {
         $headers = getallheaders();
-        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        if (array_key_exists('octopodprotocolversion', $headers) and $headers['octopodprotocolversion'] == 2) {
             $params = new ParameterBag(json_decode($_POST['mainParams'], true));
         } else $params = $parameters;
         $this->symfonyRequest = $symfonyRequest;
@@ -44,7 +62,8 @@ class Request {
 
     protected function prepareRequest() {
         $headers = getallheaders();
-        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        if (array_key_exists('octopodprotocolversion', $headers) and $headers['octopodprotocolversion'] == 2) {
 //
         } else {
             $this->data = $this->symfonyRequest->getContent();
@@ -113,7 +132,8 @@ class Request {
 
     public function attach($key = null, $default = null) {
         $headers = getallheaders();
-        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        if (array_key_exists('octopodprotocolversion', $headers) and $headers['octopodprotocolversion'] == 2) {
             if (!is_null($key)) {
                 return $_FILES[$key];
             } else {

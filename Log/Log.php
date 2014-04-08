@@ -9,6 +9,22 @@ use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+if (!function_exists('getallheaders'))
+{
+    function getallheaders()
+    {
+        $headers = '';
+        foreach ($_SERVER as $name => $value)
+        {
+            if (substr($name, 0, 5) == 'HTTP_')
+            {
+                $headers[str_replace(' ', '-', str_replace('_', ' ', substr($name, 5)))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
 
 class Log
 {
@@ -79,7 +95,8 @@ class Log
             mkdir(\App::path("log")."/".date('d.m.Y', time()));
 
         $headers = getallheaders();
-        if (array_key_exists('OctopodProtocolVersion', $headers) and $headers['OctopodProtocolVersion'] == 2) {
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        if (array_key_exists('octopodprotocolversion', $headers) and $headers['octopodprotocolversion'] == 2) {
 //            $params = new ParameterBag(json_decode($_POST['mainParams'], true));
             file_put_contents(\App::path("log")."/".date('d.m.Y', time())."/".$level."_".$type."_".time().".log",
                 '<?php return ' . var_export(array('requestUri'=> $request->getUri(), 'requestRawData' => print_r(json_decode($_POST['mainParams'], true), true), 'log' => $text), true) . ';' );
